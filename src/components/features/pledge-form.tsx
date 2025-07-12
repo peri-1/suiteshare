@@ -22,18 +22,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
 import { Loader2, User, Mail } from 'lucide-react'
+import { getEventById } from '@/lib/events'
 
-// Form validation schema
+// Updated form validation schema
 const pledgeSchema = z.object({
   fullName: z.string().min(2, 'Full name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email address'),
   phone: z.string().min(10, 'Please enter a valid phone number'),
-  groupSize: z.string().min(1, 'Please select group size'),
   fanPreference: z.string().min(1, 'Please select team preference'),
   ageRange: z.string().min(1, 'Please select age range'),
-  specialRequests: z.string().optional(),
   hearAboutUs: z.string().min(1, 'Please tell us how you heard about us'),
 })
 
@@ -42,6 +40,7 @@ type PledgeFormData = z.infer<typeof pledgeSchema>
 export function PledgeForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [eventId, setEventId] = useState<string | null>(null)
+  const [event, setEvent] = useState<Event | null>(null)
 
   const form = useForm<PledgeFormData>({
     resolver: zodResolver(pledgeSchema),
@@ -49,20 +48,41 @@ export function PledgeForm() {
       fullName: '',
       email: '',
       phone: '',
-      groupSize: '',
       fanPreference: '',
       ageRange: '',
-      specialRequests: '',
       hearAboutUs: '',
     },
   })
 
-  // Get event ID from URL parameters
+  // Get event ID and details from URL parameters
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
     const eventParam = urlParams.get('event')
-    setEventId(eventParam || 'lakers-warriors') // Default to first event
+    const eventData = getEventById(eventParam || 'lakers-warriors')
+    setEventId(eventParam || 'lakers-warriors')
+    setEvent(eventData)
   }, [])
+
+  // Get team options based on the specific game
+  const getTeamOptions = () => {
+    if (!event) return []
+
+    const gameTitle = event.title.toLowerCase()
+    const teams = []
+
+    if (gameTitle.includes('lakers'))
+      teams.push({ value: 'lakers', label: 'Lakers Fan' })
+    if (gameTitle.includes('warriors'))
+      teams.push({ value: 'warriors', label: 'Warriors Fan' })
+    if (gameTitle.includes('celtics'))
+      teams.push({ value: 'celtics', label: 'Celtics Fan' })
+    if (gameTitle.includes('nuggets'))
+      teams.push({ value: 'nuggets', label: 'Nuggets Fan' })
+
+    teams.push({ value: 'neutral', label: 'Neutral/Just for Fun' })
+
+    return teams
+  }
 
   const onSubmit = async (data: PledgeFormData) => {
     setIsSubmitting(true)
@@ -72,6 +92,7 @@ export function PledgeForm() {
       const submissionData = {
         ...data,
         eventId,
+        blockSize: event?.blockSize || 5, // Include block size for context
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
         referrer: document.referrer,
@@ -103,6 +124,8 @@ export function PledgeForm() {
     }
   }
 
+  const teamOptions = getTeamOptions()
+
   return (
     <Card>
       <CardHeader>
@@ -111,8 +134,7 @@ export function PledgeForm() {
           Your Information
         </CardTitle>
         <p className="text-sm text-gray-600">
-          Tell us about yourself and your group to help us match you with
-          like-minded fans
+          Tell us about yourself to help us create the best suite experience
         </p>
       </CardHeader>
       <CardContent>
@@ -177,41 +199,13 @@ export function PledgeForm() {
               />
             </div>
 
-            {/* Group Information */}
+            {/* Game Preferences */}
             <div className="space-y-4">
               <h3 className="text-lg font-medium text-gray-900 border-b pb-2">
-                Group Details
+                Game Preferences
               </h3>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <FormField
-                  control={form.control}
-                  name="groupSize"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Group Size *</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select group size" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="1">1 person</SelectItem>
-                          <SelectItem value="2">2 people</SelectItem>
-                          <SelectItem value="3">3 people</SelectItem>
-                          <SelectItem value="4">4 people</SelectItem>
-                          <SelectItem value="5">5 people</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
                 <FormField
                   control={form.control}
                   name="fanPreference"
@@ -228,13 +222,39 @@ export function PledgeForm() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="lakers">Lakers Fan</SelectItem>
-                          <SelectItem value="warriors">Warriors Fan</SelectItem>
-                          <SelectItem value="celtics">Celtics Fan</SelectItem>
-                          <SelectItem value="nuggets">Nuggets Fan</SelectItem>
-                          <SelectItem value="neutral">
-                            Neutral/Just for Fun
-                          </SelectItem>
+                          {teamOptions.map((team) => (
+                            <SelectItem key={team.value} value={team.value}>
+                              {team.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="ageRange"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Age Range *</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select age range" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="18-25">18-25</SelectItem>
+                          <SelectItem value="26-35">26-35</SelectItem>
+                          <SelectItem value="36-45">36-45</SelectItem>
+                          <SelectItem value="46-55">46-55</SelectItem>
+                          <SelectItem value="55+">55+</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -242,34 +262,6 @@ export function PledgeForm() {
                   )}
                 />
               </div>
-
-              <FormField
-                control={form.control}
-                name="ageRange"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Age Range *</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select age range" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="18-25">18-25</SelectItem>
-                        <SelectItem value="26-35">26-35</SelectItem>
-                        <SelectItem value="36-45">36-45</SelectItem>
-                        <SelectItem value="46-55">46-55</SelectItem>
-                        <SelectItem value="55+">55+</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
 
             {/* Additional Information */}
@@ -316,38 +308,19 @@ export function PledgeForm() {
                   </FormItem>
                 )}
               />
-
-              <FormField
-                control={form.control}
-                name="specialRequests"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Special Requests or Dietary Restrictions (Optional)
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Any special accommodations, dietary restrictions, or requests..."
-                        className="min-h-[80px]"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
 
             {/* Terms and Submit */}
             <div className="space-y-4">
               <div className="rounded-lg bg-blue-50 p-4">
                 <h4 className="font-medium text-blue-900">
-                  Beta Testing Terms
+                  Block Pledge Information
                 </h4>
                 <p className="text-sm text-blue-700 mt-1">
-                  This is a beta version. We&apos;re collecting interest and
-                  will contact you when the platform is ready for payments. No
-                  payment required at this stage.
+                  You&apos;re pledging for a block of {event?.blockSize || 5}{' '}
+                  people. We&apos;ll match you with other fans to complete your
+                  block. Payment is only processed when the entire suite fills
+                  up.
                 </p>
               </div>
 
@@ -359,12 +332,12 @@ export function PledgeForm() {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Submitting Your Interest...
+                    Submitting Your Block Pledge...
                   </>
                 ) : (
                   <>
                     <Mail className="mr-2 h-4 w-4" />
-                    Submit Pledge Interest
+                    Submit Block Pledge
                   </>
                 )}
               </Button>

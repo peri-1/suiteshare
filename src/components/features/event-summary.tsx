@@ -60,25 +60,31 @@ export function EventSummary() {
     <div className="space-y-6">
       {/* Event Details Card */}
       <Card>
-        <CardHeader>
-          <div className="flex items-start justify-between">
+        <CardHeader className="pb-4">
+          <div className="space-y-3">
             <div>
-              <CardTitle className="text-xl">{event.title}</CardTitle>
+              <CardTitle className="text-xl leading-tight">
+                {event.title}
+              </CardTitle>
               <div className="mt-2 flex items-center gap-2 text-sm text-gray-600">
-                <Calendar className="h-4 w-4" />
-                {event.date} at {event.time}
+                <Calendar className="h-4 w-4 flex-shrink-0" />
+                <span>
+                  {event.date} at {event.time}
+                </span>
               </div>
             </div>
-            <Badge className={getStatusColor(event.status)}>
-              {getStatusText(event.currentPledges, event.blocksAvailable)}
-            </Badge>
+            <div className="flex justify-start">
+              <Badge className={getStatusColor(event.status)}>
+                {getStatusText(event.currentPledges, event.blocksAvailable)}
+              </Badge>
+            </div>
           </div>
         </CardHeader>
 
         <CardContent className="space-y-4">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <MapPin className="h-4 w-4" />
-            {event.venue}
+          <div className="flex items-start gap-2 text-sm text-gray-600">
+            <MapPin className="h-4 w-4 flex-shrink-0 mt-0.5" />
+            <span className="leading-relaxed">{event.venue}</span>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -87,8 +93,27 @@ export function EventSummary() {
               <p className="text-sm text-gray-600">{event.suiteType}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-700">Block Size</p>
+              <p className="text-sm font-medium text-gray-700">
+                Suite Capacity
+              </p>
+              <p className="text-sm text-gray-600">
+                {event.totalOccupancy} people total
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm font-medium text-gray-700">
+                Your Block Size
+              </p>
               <p className="text-sm text-gray-600">{event.blockSize} people</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-700">Total Blocks</p>
+              <p className="text-sm text-gray-600">
+                {event.blocksAvailable} blocks
+              </p>
             </div>
           </div>
 
@@ -115,24 +140,49 @@ export function EventSummary() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex justify-between items-center py-2 border-b">
-              <span className="text-sm text-gray-600">Total Suite Price</span>
+            <div className="flex justify-between items-center py-2">
+              <div>
+                <span className="text-sm text-gray-600">Total Suite Price</span>
+                <p className="text-xs text-gray-500">
+                  ({event.totalOccupancy} people)
+                </p>
+              </div>
               <span className="font-medium">
-                ${event.totalPrice.toLocaleString()}
+                ${event.totalSuitePrice.toLocaleString()}
               </span>
             </div>
-            <div className="flex justify-between items-center py-2 border-b">
-              <span className="text-sm text-gray-600">Price Per Person</span>
+
+            <div className="flex justify-between items-center py-2 border-b border-gray-200">
+              <div>
+                <span className="text-sm text-gray-600">Block Price</span>
+                <p className="text-xs text-gray-500">
+                  ({event.blockSize} people)
+                </p>
+              </div>
+              <span className="font-medium">
+                ${event.blockPrice.toLocaleString()}
+              </span>
+            </div>
+
+            <div className="flex justify-between items-center py-3 bg-blue-50 px-4 rounded-lg">
+              <div>
+                <span className="text-sm font-medium text-blue-900">
+                  Your Pledge Amount
+                </span>
+                <p className="text-xs text-blue-700">(20% of block price)</p>
+              </div>
+              <span className="text-xl font-bold text-blue-600">
+                ${event.pledgeAmount}
+              </span>
+            </div>
+
+            <div className="flex justify-between items-center py-2">
+              <div>
+                <span className="text-sm text-gray-600">Cost Per Person</span>
+                <p className="text-xs text-gray-500">(in your block)</p>
+              </div>
               <span className="font-medium">
                 ${event.pricePerPerson.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between items-center py-2 bg-blue-50 px-3 rounded-lg">
-              <span className="text-sm font-medium text-blue-900">
-                Your Pledge Amount (20%)
-              </span>
-              <span className="text-lg font-bold text-blue-600">
-                ${event.pledgeAmount}
               </span>
             </div>
           </div>
@@ -150,35 +200,36 @@ export function EventSummary() {
         <CardContent>
           <div className="space-y-3">
             <div className="flex items-start gap-3">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-600">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-600 flex-shrink-0">
                 1
               </div>
               <div>
-                <p className="text-sm font-medium">Submit Your Interest</p>
+                <p className="text-sm font-medium">Submit Your Pledge</p>
                 <p className="text-xs text-gray-600">
-                  Complete this form to join the suite block
+                  Reserve your block with a 20% pledge
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-600">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-600 flex-shrink-0">
                 2
               </div>
               <div>
-                <p className="text-sm font-medium">We Match You</p>
+                <p className="text-sm font-medium">We Fill All Blocks</p>
                 <p className="text-xs text-gray-600">
-                  Connect with like-minded fans in your suite
+                  Wait for all {event.blocksAvailable} blocks to get pledgers
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-600">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-600 flex-shrink-0">
                 3
               </div>
               <div>
                 <p className="text-sm font-medium">Complete Payment</p>
                 <p className="text-xs text-gray-600">
-                  Pay when your block fills (7 days before event)
+                  Pay remaining 80% when entire suite fills (7 days before
+                  event)
                 </p>
               </div>
             </div>
@@ -198,7 +249,7 @@ export function EventSummary() {
           <div className="space-y-2 text-sm">
             <p className="flex items-center gap-2">
               <span className="text-green-600">✓</span>
-              Full refund if block doesn&apos;t fill
+              Full refund if entire suite doesn&apos;t fill
             </p>
             <p className="flex items-center gap-2">
               <span className="text-green-600">✓</span>

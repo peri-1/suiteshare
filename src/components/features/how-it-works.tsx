@@ -1,6 +1,6 @@
 export function HowItWorks() {
   return (
-    <section className="how-it-works">
+    <section id="how-it-works" className="how-it-works">
       <div className="container">
         <h2>How It Works</h2>
         <div className="steps">
@@ -11,13 +11,13 @@ export function HowItWorks() {
           </div>
           <div className="step">
             <div className="step-number">2</div>
-            <h3>Pledge 20% to Secure Your Spot</h3>
-            <p>Reserve your place and connect with other fans</p>
+            <h3>Pledge 20% to Secure Your Block</h3>
+            <p>Reserve your block and get matched with fans in your group</p>
           </div>
           <div className="step">
             <div className="step-number">3</div>
-            <h3>Complete Purchase When Block Fills</h3>
-            <p>Pay remaining balance once your suite group is complete</p>
+            <h3>Complete Purchase When Suite Fills</h3>
+            <p>Pay remaining balance once all blocks have pledgers</p>
           </div>
         </div>
       </div>

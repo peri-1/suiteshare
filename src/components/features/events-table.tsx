@@ -31,7 +31,7 @@ export function EventsTable() {
   }
 
   return (
-    <section className="container mx-auto px-4 py-20">
+    <section id="available-events" className="container mx-auto px-4 py-20">
       <div className="mb-12 text-center">
         <h2 className="mb-4 text-3xl font-bold text-gray-900">
           Available Suite Experiences
@@ -80,32 +80,60 @@ export function EventsTable() {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-700">
+                      Suite Capacity
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {event.totalOccupancy} people total
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">
                       Block Size
                     </p>
                     <p className="text-sm text-gray-600">
                       {event.blockSize} people
                     </p>
                   </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">
+                      Blocks Available
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {event.blocksAvailable} blocks
+                    </p>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4 rounded-lg bg-gray-50 p-4">
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600">Total Suite</p>
-                    <p className="font-bold text-gray-900">
-                      ${event.totalPrice.toLocaleString()}
-                    </p>
+                {/* Pricing Breakdown */}
+                <div className="space-y-3 rounded-lg bg-gray-50 p-4">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-600">Total Suite Price</span>
+                    <span className="font-medium">
+                      ${event.totalSuitePrice.toLocaleString()}
+                    </span>
                   </div>
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600">Per Person</p>
-                    <p className="font-bold text-gray-900">
-                      ${event.pricePerPerson.toLocaleString()}
-                    </p>
+                  <div className="flex justify-between items-center text-sm border-b border-gray-200 pb-2">
+                    <span className="text-gray-600">Block Price</span>
+                    <span className="font-medium">
+                      ${event.blockPrice.toLocaleString()}
+                    </span>
                   </div>
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600">Pledge (20%)</p>
-                    <p className="font-bold text-blue-600">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-blue-900">
+                      Your Pledge (20%)
+                    </span>
+                    <span className="text-lg font-bold text-blue-600">
                       ${event.pledgeAmount}
-                    </p>
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-600">Per Person</span>
+                    <span className="font-medium">
+                      ${event.pricePerPerson.toLocaleString()}
+                    </span>
                   </div>
                 </div>
 
