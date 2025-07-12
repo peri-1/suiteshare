@@ -26,10 +26,8 @@ export function EventsTable() {
   }
 
   const handlePledgeClick = (eventId: string) => {
-    // For now, just show an alert - we'll implement proper navigation later
-    alert(
-      `Pledge clicked for event: ${eventId}\nThis will navigate to pledge form in future phases.`
-    )
+    // Navigate to pledge page with event ID
+    window.location.href = `/pledge?event=${eventId}`
   }
 
   return (
