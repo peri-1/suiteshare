@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+
+# Block all search engines during beta testing
+# Remove this file when going public
