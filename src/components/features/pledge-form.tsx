@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/select'
 import { Loader2, User, Mail } from 'lucide-react'
 import { getEventById } from '@/lib/events'
+import { Event } from '@/types/events'
 
 // Updated form validation schema
 const pledgeSchema = z.object({
@@ -60,7 +61,7 @@ export function PledgeForm() {
     const eventParam = urlParams.get('event')
     const eventData = getEventById(eventParam || 'lakers-warriors')
     setEventId(eventParam || 'lakers-warriors')
-    setEvent(eventData)
+    setEvent(eventData || null) // Handle undefined case
   }, [])
 
   // Get team options based on the specific game
