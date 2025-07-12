@@ -1,0 +1,53 @@
+[
+  {
+    "id": "lakers-warriors",
+    "title": "Lakers vs Warriors",
+    "date": "2025-03-15",
+    "time": "7:00 PM",
+    "venue": "Crypto.com Arena, Los Angeles, CA",
+    "suiteType": "Courtside Suite",
+    "blockSize": 5,
+    "totalPrice": 6000,
+    "pricePerPerson": 1200,
+    "pledgeAmount": 240,
+    "blocksAvailable": 4,
+    "currentPledges": 2,
+    "amenities": ["Premium food", "Open bar", "Parking", "Courtside view"],
+    "status": "high",
+    "isActive": true
+  },
+  {
+    "id": "lakers-celtics",
+    "title": "Lakers vs Celtics",
+    "date": "2025-03-22",
+    "time": "7:30 PM",
+    "venue": "Crypto.com Arena, Los Angeles, CA",
+    "suiteType": "Club Level Suite",
+    "blockSize": 5,
+    "totalPrice": 4000,
+    "pricePerPerson": 800,
+    "pledgeAmount": 160,
+    "blocksAvailable": 4,
+    "currentPledges": 1,
+    "amenities": ["Premium food", "Full bar", "Parking", "Club level view"],
+    "status": "medium",
+    "isActive": true
+  },
+  {
+    "id": "lakers-nuggets",
+    "title": "Lakers vs Nuggets",
+    "date": "2025-03-29",
+    "time": "8:00 PM",
+    "venue": "Crypto.com Arena, Los Angeles, CA",
+    "suiteType": "Premium Suite",
+    "blockSize": 5,
+    "totalPrice": 5000,
+    "pricePerPerson": 1000,
+    "pledgeAmount": 200,
+    "blocksAvailable": 4,
+    "currentPledges": 0,
+    "amenities": ["Premium food", "Premium bar", "Parking", "Premium view"],
+    "status": "low",
+    "isActive": true
+  }
+]
